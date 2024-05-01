@@ -15,7 +15,7 @@ typedef struct _Mouse {
 
 void getMouse(Mouse *mouse);
 uint64_t ftoms(uint64_t frame, uint8_t fps);
-void update(uint64_t frame, SDL_KeyCode key, Mouse *mouse);
+void update(uint64_t frame, uint64_t time, SDL_KeyCode key, Mouse *mouse);
 
 int main(void)
 {
@@ -41,6 +41,7 @@ int main(void)
         const uint8_t fps = 60;
         const float mspd = (1 / 60.0f) * 1000.0f;
         uint64_t frame = 0;
+        uint64_t time = 0;
 
         while (!quit) {
             uint32_t loop_start = SDL_GetTicks();
@@ -66,9 +67,10 @@ int main(void)
                 }
             }
 
-            update(frame, key, &mouse);
+            update(frame, time, key, &mouse);
             SDL_RenderPresent(renderer);
             frame++;
+            time = ((float)frame / (float)fps) * 1000;
 
             uint32_t loop_end = SDL_GetTicks();
             uint32_t elapsed_time = loop_end - loop_start;
@@ -99,13 +101,8 @@ void getMouse(Mouse * mouse)
     mouse->button = SDL_GetMouseState(&mouse->x, &mouse->y);
 }
 
-uint64_t ftoms(uint64_t frame, uint8_t fps)
-    // frame to milliseconds
-{
-    return ((float)frame / (float)fps) * 1000;
-}
 
-void update(uint64_t frame, SDL_KeyCode key, Mouse *mouse)
+void update(uint64_t frame, uint64_t time, SDL_KeyCode key, Mouse *mouse)
 {
     SDL_Delay(2);
 }
