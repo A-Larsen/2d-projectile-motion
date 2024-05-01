@@ -13,14 +13,14 @@ typedef struct _Mouse {
     uint32_t button;
 } Mouse;
 
-void getMouse(Mouse * mouse);
+void getMouse(Mouse *mouse);
 uint64_t ftoms(uint64_t frame, uint8_t fps);
-void update(SDL_KeyCode key);
+void update(uint64_t frame, SDL_KeyCode key, Mouse *mouse);
 
 int main(void)
 {
-    SDL_Window * window;
-    SDL_Renderer * renderer;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
 
     { // SDL Initialization
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -66,7 +66,7 @@ int main(void)
                 }
             }
 
-            update(key);
+            update(frame, key, &mouse);
             SDL_RenderPresent(renderer);
             frame++;
 
@@ -105,7 +105,7 @@ uint64_t ftoms(uint64_t frame, uint8_t fps)
     return ((float)frame / (float)fps) * 1000;
 }
 
-void update(SDL_KeyCode key)
+void update(uint64_t frame, SDL_KeyCode key, Mouse *mouse)
 {
     SDL_Delay(2);
 }
