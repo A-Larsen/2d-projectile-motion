@@ -13,9 +13,14 @@ typedef struct _Mouse {
     uint32_t button;
 } Mouse;
 
+enum /* color */ {COLOR_RED, COLOR_GREEN, COLOR_BLUE, COLOR_ORANGE, COLOR_GREY, COLOR_WHITE, COLOR_BLACK, COLOR_SIZE};
+
 void getMouse(Mouse *mouse);
 uint64_t ftoms(uint64_t frame, uint8_t fps);
-void update(uint64_t frame, uint64_t time, SDL_KeyCode key, Mouse *mouse);
+void update(SDL_Renderer *renderer, uint64_t frame, uint64_t time,
+            SDL_KeyCode key, Mouse *mouse);
+void
+setColor(SDL_Renderer *renderer, uint8_t color);
 
 int main(void)
 {
@@ -67,7 +72,9 @@ int main(void)
                 }
             }
 
-            update(frame, time, key, &mouse);
+            setColor(renderer, COLOR_BLACK);
+            SDL_RenderClear(renderer);
+            update(renderer, frame, time, key, &mouse);
             SDL_RenderPresent(renderer);
             frame++;
             time = ((float)frame / (float)fps) * 1000;
@@ -101,8 +108,33 @@ void getMouse(Mouse * mouse)
     mouse->button = SDL_GetMouseState(&mouse->x, &mouse->y);
 }
 
-
-void update(uint64_t frame, uint64_t time, SDL_KeyCode key, Mouse *mouse)
+void update(SDL_Renderer *renderer, uint64_t frame, uint64_t time,
+            SDL_KeyCode key, Mouse *mouse)
 {
+    SDL_Rect rect = {
+        .x = mouse->x,
+        .y = mouse->y,
+        .w = 10,
+        .h = 10
+    };
+    setColor(renderer, COLOR_BLUE);
+    SDL_RenderFillRect(renderer, &rect);
     SDL_Delay(2);
+}
+
+void
+setColor(SDL_Renderer *renderer, uint8_t color)
+{
+    const SDL_Color colors[] = {
+        [COLOR_RED] = {.r = 217, .g = 100, .b = 89, .a = 255},
+        [COLOR_WHITE] = {.r = 255, .g = 255, .b = 255, .a = 255},
+        [COLOR_GREEN] = {.r = 88, .g = 140, .b = 126, .a = 255},
+        [COLOR_BLUE] = {.r = 146, .g = 161, .b = 185, .a = 255},
+        [COLOR_ORANGE] = {.r = 242, .g = 174, .b = 114, .a = 255},
+        [COLOR_GREY] = {.r = 89, .g = 89, .b = 89, .a = 89},
+        [COLOR_BLACK] = {.r = 0, .g = 0, .b = 0, .a = 0},
+    };
+
+    SDL_SetRenderDrawColor(renderer, colors[color].r, colors[color].g,
+                           colors[color].b, colors[color].a);
 }
