@@ -7,15 +7,15 @@
 #define SCREEN_HEIGHT_PX 800
 #define ACC_GRAVITY_MPS 9.81f
 
-uint64_t ftoms(uint64_t frame, uint8_t fps)
-    // frame to milliseconds
-{
-    return ((float)frame / (float)fps) * 1000;
-}
+typedef struct _Mouse {
+    int x;
+    int y;
+    uint32_t button;
+} Mouse;
 
-void update(SDL_KeyCode key) {
-    SDL_Delay(2);
-}
+void getMouse(Mouse * mouse);
+uint64_t ftoms(uint64_t frame, uint8_t fps);
+void update(SDL_KeyCode key);
 
 int main(void)
 {
@@ -32,15 +32,14 @@ int main(void)
                                              SCREEN_WIDTH_PX, SCREEN_HEIGHT_PX,
                                              SDL_WINDOW_SHOWN);
 
-        renderer = SDL_CreateRenderer(window, 0,
-                                                SDL_RENDERER_SOFTWARE);
+        renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_SOFTWARE);
     } // SDL Initialization
 
 
     { // game loop
         bool quit = false;
-        uint8_t fps = 60;
-        float mspd = (1 / 60.0f) * 1000.0f;
+        const uint8_t fps = 60;
+        const float mspd = (1 / 60.0f) * 1000.0f;
         uint64_t frame = 0;
 
         while (!quit) {
@@ -48,7 +47,10 @@ int main(void)
 
             SDL_Event event;
             SDL_KeyCode key = 0;
+            Mouse mouse;
             bool keydown = false;
+
+            getMouse(&mouse);
 
             while (SDL_PollEvent(&event)) {
                 switch (event.type) {
@@ -77,7 +79,8 @@ int main(void)
                 SDL_Delay(delay);
             }
 
-            printf("%lu\n", ftoms(frame, fps));
+            //printf("%lu\n", ftoms(frame, fps));
+            //printf("%d, %d\n", mouse.x, mouse.y);
         }
 
     } // game loop
@@ -89,4 +92,20 @@ int main(void)
         SDL_Quit();
     } // quit
 
+}
+
+void getMouse(Mouse * mouse)
+{
+    mouse->button = SDL_GetMouseState(&mouse->x, &mouse->y);
+}
+
+uint64_t ftoms(uint64_t frame, uint8_t fps)
+    // frame to milliseconds
+{
+    return ((float)frame / (float)fps) * 1000;
+}
+
+void update(SDL_KeyCode key)
+{
+    SDL_Delay(2);
 }
