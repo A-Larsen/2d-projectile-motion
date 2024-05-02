@@ -112,18 +112,28 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, double velocity,
               double angle, double seconds)
     // velocity in meters per second
 {
-    printf("%f\n", seconds);
     double vi_y = -velocity * sinf(angle);
     double vi_x = velocity * cosf(angle);
+    double v_x = (double)vi_x * (double)seconds;
+    double v_y = (double)vi_y * (double)seconds + (0.5f * ACC_GRAVITY_MPS
+                        * (seconds * seconds));
 
     SDL_Rect rect = {
-        .x = point->x + (double)vi_x * (double)seconds,
-        .y = point->y + (double)vi_y * (double)seconds + (0.5f * ACC_GRAVITY_MPS
-            * (seconds * seconds)),
+        .x = point->x + v_x,
+        .y = point->y + v_y,
         .w = 10,
         .h = 10
     };
-    SDL_RenderFillRect(renderer, &rect);
+
+    /* double a = (velocity - -velocity) / -ACC_GRAVITY_MPS; */
+    //printf("final velocity: %f\n", velocity + - ACC_GRAVITY_MPS * 10);
+    if (v_y < 0) {
+
+        printf("seconds: %f\n", seconds);
+        printf("y displacement: %f\n", v_y);
+        printf("x displacement: %f\n", v_x);
+        SDL_RenderFillRect(renderer, &rect);
+    }
 
 }
 
@@ -149,7 +159,7 @@ void update(SDL_Renderer *renderer, uint64_t frame, double seconds,
     setColor(renderer, COLOR_RED);
     SDL_RenderDrawLine(renderer, 0, 400, 1600, 400);
     //point.y = point.y * -1;
-    drawPath(renderer, &point, 100, 0.78539, seconds);
+    drawPath(renderer, &point, 120, 0.78539, seconds);
     //SDL_Delay(100);
 }
 
