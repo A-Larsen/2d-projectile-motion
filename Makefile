@@ -1,2 +1,2 @@
 projectile: projectile.c
-	gcc -o $@ $^ -lSDL2 -lm
+	gcc -g -o $@ $^ -lSDL2 -lm

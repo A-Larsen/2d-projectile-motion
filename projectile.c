@@ -17,7 +17,7 @@ enum /* color */ {COLOR_RED, COLOR_GREEN, COLOR_BLUE, COLOR_ORANGE, COLOR_GREY, 
 
 void getMouse(Mouse *mouse);
 uint64_t ftoms(uint64_t frame, uint8_t fps);
-void update(SDL_Renderer *renderer, uint64_t frame, uint64_t time,
+void update(SDL_Renderer *renderer, uint64_t frame, uint64_t seconds,
             SDL_KeyCode key, Mouse *mouse);
 void
 setColor(SDL_Renderer *renderer, uint8_t color);
@@ -46,7 +46,7 @@ int main(void)
         const uint8_t fps = 60;
         const float mspd = (1 / 60.0f) * 1000.0f;
         uint64_t frame = 0;
-        uint64_t time = 0;
+        float seconds = 0;
 
         while (!quit) {
             uint32_t loop_start = SDL_GetTicks();
@@ -72,21 +72,22 @@ int main(void)
                 }
             }
 
-            setColor(renderer, COLOR_BLACK);
-            SDL_RenderClear(renderer);
-            update(renderer, frame, time, key, &mouse);
+            /* setColor(renderer, COLOR_BLACK); */
+            /* SDL_RenderClear(renderer); */
+            update(renderer, frame, seconds, key, &mouse);
             SDL_RenderPresent(renderer);
             frame++;
-            time = ((float)frame / (float)fps) * 1000;
+            seconds = ((float)frame / (float)fps);
+            printf("%f\n", seconds);
 
             uint32_t loop_end = SDL_GetTicks();
             uint32_t elapsed_time = loop_end - loop_start;
 
             uint32_t delay = ceilf(mspd - (float)elapsed_time);
 
-            if (delay > 0) {
-                SDL_Delay(delay);
-            }
+            /* if (delay > 0) { */
+            /*     SDL_Delay(delay); */
+            /* } */
 
             //printf("%lu\n", ftoms(frame, fps));
             //printf("%d, %d\n", mouse.x, mouse.y);
@@ -108,7 +109,28 @@ void getMouse(Mouse * mouse)
     mouse->button = SDL_GetMouseState(&mouse->x, &mouse->y);
 }
 
-void update(SDL_Renderer *renderer, uint64_t frame, uint64_t time,
+void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
+              float angle, float seconds)
+    // velocity in meters per second
+{
+    /* float Vx, Vy; */
+    /* uint64_t seconds = seconds / 1000.0f; */
+    seconds = seconds / 1000;
+    float vi_y = -velocity * sinf(angle);
+    float vi_x = velocity * cosf(angle);
+
+    SDL_Rect rect = {
+        .x = point->x + (float)vi_x * (float)seconds,
+        .y = point->y + (float)vi_y * (float)seconds + (0.5f * ACC_GRAVITY_MPS
+            * (seconds * seconds)),
+        .w = 10,
+        .h = 10
+    };
+    SDL_RenderFillRect(renderer, &rect);
+
+}
+
+void update(SDL_Renderer *renderer, uint64_t frame, uint64_t seconds,
             SDL_KeyCode key, Mouse *mouse)
 {
     SDL_Rect rect = {
@@ -117,9 +139,17 @@ void update(SDL_Renderer *renderer, uint64_t frame, uint64_t time,
         .w = 10,
         .h = 10
     };
+    SDL_Point point = {
+        .x = 800,
+        .y = 400
+    };
     setColor(renderer, COLOR_BLUE);
     SDL_RenderFillRect(renderer, &rect);
-    SDL_Delay(2);
+    setColor(renderer, COLOR_RED);
+    SDL_RenderDrawLine(renderer, 0, 400, 1600, 400);
+    //point.y = point.y * -1;
+    drawPath(renderer, &point, 100, 0.78539, seconds);
+    //SDL_Delay(100);
 }
 
 void
