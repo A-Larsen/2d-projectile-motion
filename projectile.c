@@ -26,6 +26,8 @@ int main(void)
     SDL_Window *window;
     SDL_Renderer *renderer;
 
+    printf("\033[2J"); // clear entire screen
+
     { // SDL Initialization
         if (SDL_Init(SDL_INIT_VIDEO) != 0)
             fprintf(stderr, "could not init video\n%s", SDL_GetError());
@@ -131,7 +133,7 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, double velocity,
     /* double a = (velocity - -velocity) / -ACC_GRAVITY_MPS; */
     //printf("final velocity: %f\n", velocity + - ACC_GRAVITY_MPS * 10);
     if (delta_y <= -1) {
-
+        printf("\033[H");
         printf("seconds: %f\n", seconds);
         printf("y displacement: %f\n", delta_y);
         printf("x displacement: %f\n", delta_x);
