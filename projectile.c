@@ -16,7 +16,6 @@ typedef struct _Mouse {
 enum /* color */ {COLOR_RED, COLOR_GREEN, COLOR_BLUE, COLOR_ORANGE, COLOR_GREY, COLOR_WHITE, COLOR_BLACK, COLOR_SIZE};
 
 void getMouse(Mouse *mouse);
-uint64_t ftoms(uint64_t frame, uint8_t fps);
 void update(SDL_Renderer *renderer, uint64_t frame, uint64_t seconds,
             SDL_KeyCode key, Mouse *mouse);
 void
@@ -43,8 +42,8 @@ int main(void)
 
     { // game loop
         bool quit = false;
-        const uint8_t fps = 60;
-        const float mspd = (1 / 60.0f) * 1000.0f;
+        const uint16_t fps = 60;
+        const float mspd = (1.0f / (float)fps) * 1000.0f;
         uint64_t frame = 0;
         float seconds = 0;
 
@@ -115,7 +114,7 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
 {
     /* float Vx, Vy; */
     /* uint64_t seconds = seconds / 1000.0f; */
-    seconds = seconds / 1000;
+    seconds = seconds / 10;
     float vi_y = -velocity * sinf(angle);
     float vi_x = velocity * cosf(angle);
 
