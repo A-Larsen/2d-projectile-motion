@@ -114,6 +114,9 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
               float angle, float seconds)
     // velocity in meters per second
 {
+    // REMEMBER! negative is upward and positive is downward. That is why
+    // the initial velocity for y (vi_y) is negative and acceleration due to
+    // gravity (ACC_GRAVITY_MPS) is positive
     float vi_y = -velocity * sinf(angle);
     float vi_x = velocity * cosf(angle);
     float delta_x = (float)vi_x * (float)seconds;
