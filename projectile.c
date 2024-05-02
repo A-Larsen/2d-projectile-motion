@@ -143,8 +143,12 @@ void update(SDL_Renderer *renderer, uint64_t frame, uint64_t seconds,
         .x = 800,
         .y = 400
     };
-    setColor(renderer, COLOR_BLUE);
-    SDL_RenderFillRect(renderer, &rect);
+    if (mouse->button == 1) {
+        setColor(renderer, COLOR_BLUE);
+        SDL_RenderFillRect(renderer, &rect);
+
+    }
+
     setColor(renderer, COLOR_RED);
     SDL_RenderDrawLine(renderer, 0, 400, 1600, 400);
     //point.y = point.y * -1;
