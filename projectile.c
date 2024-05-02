@@ -139,7 +139,7 @@ void update(SDL_Renderer *renderer, uint64_t frame, uint64_t seconds,
         .h = 10
     };
     SDL_Point point = {
-        .x = 800,
+        .x = 100,
         .y = 400
     };
     if (mouse->button == 1) {
