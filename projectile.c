@@ -119,9 +119,8 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, double velocity,
     double delta_x = (double)vi_x * (double)seconds;
     double delta_y = (double)vi_y * (double)seconds + (0.5f * ACC_GRAVITY_MPS
                         * (seconds * seconds));
-    double final_delta_x = vi_x * 17.2833; // I plugged in the time I already
-                                           // knew
-
+    double final_delta_x = vi_x * 17.2833333; // I plugged in the time I already
+                                              // knew
 
     SDL_Rect rect = {
         .x = point->x + delta_x,
