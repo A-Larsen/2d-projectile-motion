@@ -117,6 +117,9 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, double velocity,
     double delta_x = (double)vi_x * (double)seconds;
     double delta_y = (double)vi_y * (double)seconds + (0.5f * ACC_GRAVITY_MPS
                         * (seconds * seconds));
+    double final_delta_x = vi_x * 17.2833; // I plugged in the time I already
+                                           // knew
+
 
     SDL_Rect rect = {
         .x = point->x + delta_x,
@@ -127,14 +130,14 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, double velocity,
 
     /* double a = (velocity - -velocity) / -ACC_GRAVITY_MPS; */
     //printf("final velocity: %f\n", velocity + - ACC_GRAVITY_MPS * 10);
-    if (delta_y <= 0) {
+    if (delta_y <= -1) {
 
         printf("seconds: %f\n", seconds);
         printf("y displacement: %f\n", delta_y);
         printf("x displacement: %f\n", delta_x);
         printf("x: %d\n", rect.x);
         printf("y: %d\n", rect.y);
-        //printf("x final displacement: %f\n", velocity * 17.29f);
+        printf("x final displacement: %f\n", final_delta_x);
         SDL_RenderFillRect(renderer, &rect);
     }
 
