@@ -6,6 +6,7 @@
 #define SCREEN_WIDTH_PX 1600
 #define SCREEN_HEIGHT_PX 800
 #define ACC_GRAVITY_MPS 9.81f
+#define GROUND_HEIGHT_PX 750
 
 typedef struct _Mouse {
     int x;
@@ -73,8 +74,8 @@ int main(void)
                 }
             }
 
-            /* setColor(renderer, COLOR_BLACK); */
-            /* SDL_RenderClear(renderer); */
+            setColor(renderer, COLOR_BLACK);
+            SDL_RenderClear(renderer);
             update(renderer, frame, seconds, key, &mouse);
             SDL_RenderPresent(renderer);
             frame++;
@@ -122,7 +123,7 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
     float delta_x = (float)vi_x * (float)seconds;
     float delta_y = (float)vi_y * (float)seconds + (0.5f * ACC_GRAVITY_MPS
                         * (seconds * seconds));
-    float final_delta_x = vi_x * 17.283333; // I plugged in the time I already
+    //float final_delta_x = vi_x * 17.283333; // I plugged in the time I already
                                               // knew
 
     SDL_Rect rect = {
@@ -141,7 +142,7 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
         printf("x displacement: %f\n", delta_x);
         printf("x: %d\n", rect.x);
         printf("y: %d\n", rect.y);
-        printf("x final displacement: %f\n", final_delta_x);
+        //printf("x final displacement: %f\n", final_delta_x);
         SDL_RenderFillRect(renderer, &rect);
     }
 
@@ -150,26 +151,42 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
 void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
             SDL_KeyCode key, Mouse *mouse)
 {
-    SDL_Rect rect = {
-        .x = mouse->x,
-        .y = mouse->y,
-        .w = 10,
-        .h = 10
-    };
+    static float launch_start = 0;
+    static float launch_angle = 0;
+    /* SDL_Rect rect = { */
+    /*     .x = mouse->x, */
+    /*     .y = mouse->y, */
+    /*     .w = 10, */
+    /*     .h = 10 */
+    /* }; */
     SDL_Point point = {
         .x = 100,
-        .y = 400
+        .y = GROUND_HEIGHT_PX
     };
-    if (mouse->button == 1) {
-        setColor(renderer, COLOR_BLUE);
-        SDL_RenderFillRect(renderer, &rect);
 
-    }
+    // 0 to 90 degrees (1/2 pi)
+    setColor(renderer, COLOR_BLUE);
+    SDL_RenderDrawLine(renderer, point.x, point.y, mouse->x, mouse->y);
+
+
+    int opposite = (mouse->y - point.y);
+    int adjacent = (mouse->x - point.x);
+    float angle = -atanf((float)opposite / (float)adjacent);
 
     setColor(renderer, COLOR_RED);
-    SDL_RenderDrawLine(renderer, 0, 400, 1600, 400);
+    SDL_RenderDrawLine(renderer, 0, GROUND_HEIGHT_PX, SCREEN_WIDTH_PX, GROUND_HEIGHT_PX);
     //point.y = point.y * -1;
-    drawPath(renderer, &point, 120, 0.78539, seconds);
+    //drawPath(renderer, &point, 100, 1.3962, seconds);
+    if (mouse->button == 1) {
+        launch_start = seconds;
+        launch_angle = angle;
+        //printf("%f\n", angle);
+        //printf("%f\n", launch_start);
+    }
+
+    if (launch_start > 0) {
+        drawPath(renderer, &point, 100, launch_angle, seconds - launch_start);
+    }
     //SDL_Delay(100);
 }
 
