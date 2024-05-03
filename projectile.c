@@ -153,6 +153,7 @@ void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
 {
     static float launch_start = 0;
     static float launch_angle = 0;
+    static float launch_velocity = 0;
     /* SDL_Rect rect = { */
     /*     .x = mouse->x, */
     /*     .y = mouse->y, */
@@ -180,12 +181,13 @@ void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
     if (mouse->button == 1) {
         launch_start = seconds;
         launch_angle = angle;
-        //printf("%f\n", angle);
-        //printf("%f\n", launch_start);
+        launch_velocity = sqrt((opposite * opposite) + (adjacent * adjacent));
+        // hypotenuse is velocity
+        // 
     }
 
     if (launch_start > 0) {
-        drawPath(renderer, &point, 100, launch_angle, seconds - launch_start);
+        drawPath(renderer, &point, launch_velocity, launch_angle, seconds - launch_start);
     }
     //SDL_Delay(100);
 }
