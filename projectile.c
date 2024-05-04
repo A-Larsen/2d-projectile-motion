@@ -181,7 +181,7 @@ void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
     if (mouse->button == 1) {
         launch_start = seconds;
         launch_angle = angle;
-        launch_velocity = sqrt((opposite * opposite) + (adjacent * adjacent));
+        launch_velocity = sqrtf((opposite * opposite) + (adjacent * adjacent));
         // hypotenuse is velocity
         // 
     }
