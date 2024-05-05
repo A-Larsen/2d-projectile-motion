@@ -31,7 +31,8 @@ typedef struct _Mouse {
     uint32_t button;
 } Mouse;
 
-enum /* color */ {COLOR_RED, COLOR_GREEN, COLOR_BLUE, COLOR_ORANGE, COLOR_GREY, COLOR_WHITE, COLOR_BLACK, COLOR_SIZE};
+enum /* color */ {COLOR_RED, COLOR_GREEN, COLOR_BLUE, COLOR_ORANGE, COLOR_GREY,
+                  COLOR_WHITE, COLOR_BLACK, COLOR_SIZE};
 
 void getMouse(Mouse *mouse);
 void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
@@ -140,8 +141,6 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
     float delta_x = (float)vi_x * (float)seconds;
     float delta_y = (float)vi_y * (float)seconds + (0.5f * ACC_GRAVITY_MPS
                         * (seconds * seconds));
-    //float final_delta_x = vi_x * 17.283333; // I plugged in the time I already
-                                              // knew
 
     SDL_Rect rect = {
         .x = point->x + delta_x,
@@ -150,16 +149,13 @@ void drawPath(SDL_Renderer *renderer, SDL_Point *point, float velocity,
         .h = 10
     };
 
-    /* float a = (velocity - -velocity) / -ACC_GRAVITY_MPS; */
-    //printf("final velocity: %f\n", velocity + - ACC_GRAVITY_MPS * 10);
     if (delta_y <= -1) {
-        printf("\033[H"); // clear and set to home postion escape sequence
+        printf("\033[H"); // clear and set to home position escape sequence
         printf("seconds: %f\n", seconds);
         printf("y displacement: %f\n", delta_y);
         printf("x displacement: %f\n", delta_x);
         printf("x: %d\n", rect.x);
         printf("y: %d\n", rect.y);
-        //printf("x final displacement: %f\n", final_delta_x);
         SDL_RenderFillRect(renderer, &rect);
     }
 
@@ -171,14 +167,9 @@ void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
     static float launch_start = 0;
     static float launch_angle = 0;
     static float launch_velocity = 0;
-    /* SDL_Rect rect = { */
-    /*     .x = mouse->x, */
-    /*     .y = mouse->y, */
-    /*     .w = 10, */
-    /*     .h = 10 */
-    /* }; */
+
     SDL_Point point = {
-        .x = 100,
+        .x = 10,
         .y = GROUND_HEIGHT_PX
     };
 
@@ -192,21 +183,20 @@ void update(SDL_Renderer *renderer, uint64_t frame, float seconds,
     float angle = -atanf((float)opposite / (float)adjacent);
 
     setColor(renderer, COLOR_RED);
-    SDL_RenderDrawLine(renderer, 0, GROUND_HEIGHT_PX, SCREEN_WIDTH_PX, GROUND_HEIGHT_PX);
-    //point.y = point.y * -1;
-    //drawPath(renderer, &point, 100, 1.3962, seconds);
+    SDL_RenderDrawLine(renderer, 0, GROUND_HEIGHT_PX, SCREEN_WIDTH_PX,
+                       GROUND_HEIGHT_PX);
+
     if (mouse->button == 1) {
         launch_start = seconds;
         launch_angle = angle;
-        launch_velocity = sqrtf((opposite * opposite) + (adjacent * adjacent));
         // hypotenuse is velocity
-        // 
+        launch_velocity = sqrtf((opposite * opposite) + (adjacent * adjacent));
     }
 
     if (launch_start > 0) {
-        drawPath(renderer, &point, launch_velocity, launch_angle, seconds - launch_start);
+        drawPath(renderer, &point, launch_velocity, launch_angle, seconds -
+                 launch_start);
     }
-    //SDL_Delay(100);
 }
 
 void
