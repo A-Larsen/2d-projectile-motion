@@ -5,3 +5,5 @@ Simulates projectile motion by using the kinematics equations.
 Right click your mouse to launch a projectile. The line from the ground to the
 mouse is the velocity and the angle of that line relative to the ground is the
 angle of the launch projectile.
+
+image::2D-Projectile.png[]
