@@ -117,8 +117,8 @@ int main(void)
 
 
     { // quit
-        SDL_DestroyWindow(window);
         SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
         SDL_Quit();
     } // quit
 
