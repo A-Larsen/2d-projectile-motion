@@ -1,4 +1,6 @@
 = 2D Projectile Motion
+
+== About
 Simulates projectile motion by using the kinematics equations.
 
 == How to Play
