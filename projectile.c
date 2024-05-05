@@ -98,7 +98,6 @@ int main(void)
             SDL_RenderPresent(renderer);
             frame++;
             seconds = ((float)frame / (float)fps);
-            /* printf("%f\n", seconds); */
 
             uint32_t loop_end = SDL_GetTicks();
             uint32_t elapsed_time = loop_end - loop_start;
@@ -108,9 +107,6 @@ int main(void)
             if (delay > 0) {
                 SDL_Delay(delay);
             }
-
-            //printf("%lu\n", ftoms(frame, fps));
-            //printf("%d, %d\n", mouse.x, mouse.y);
         }
 
     } // game loop
